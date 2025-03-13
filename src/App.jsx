@@ -3,6 +3,7 @@ import Search from './components/search';
 import Spinner from './components/Spinner';
 import MovieCard from './components/MovieCard';
 import { useDebounce } from 'react-use';
+import { updateSearchCount } from './appwrite';
 
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -51,6 +52,11 @@ function App() {
             }
 
             setMovieList(data.results || []);
+
+            if(query && data.results.length > 0){
+                await updateSearchCount(query,data.results[0]);
+            }
+            updateSearchCount();
         } catch (error) {
             console.error(`Error fetching movies: ${error}`);
             setErrorMessage('Error fetching movies. Please try again later.');
